@@ -37,7 +37,7 @@
     .card { background: linear-gradient(180deg,#161a20, #101317); border:1px solid #1e252c; border-radius: var(--radius); box-shadow: var(--shadow); overflow:clip }
     .card h3 { margin: 0 0 10px; font-size: 1.1rem }
 
-    .map-wrap { aspect-ratio: 16/10; }
+    .map-wrap { width: 100%; height: 78vh; border-radius: 16px; overflow: hidden; }
     iframe { width:100%; height:100%; border:0; display:block }
 
     .section { padding: 10px; }
@@ -77,7 +77,7 @@
   <main class="grid">
     <!-- Coluna do mapa -->
     <section class="card section">
-      <h3>Mapa (seu trajeto atual — 6 paradas)</h3>
+      <h3>Mapa — rota fiel ao seu print (ampliada)</h3>
       <div class="map-wrap">
         <iframe src="https://www.google.com/maps/dir/Parque+Ramiro+Ruediger/Eisenbahn+Biergarten/NOSSA+Cozinha+e+Bar/ESQUINA+DECK+BAR/Alek+Bar/Noa+Noa+Blumenau/Tamandar%C3%A9+Food+Park/@-26.9135027,-49.0908527,17z/am=t/data=!3m1!4b1!4m79!4m78!1m10!1m1!1s0x94df192c74b4af19:0xcbfa9dde180aaf3!2m2!1d-49.0854747!2d-26.9134278!3m4!1m2!1d-49.0877278!2d-26.9143896!3s0x94df192c197141af:0x70863b6020d6d2c8!1m20!1m1!1s0x94df19801e880781:0xb669ea20ac861570!2m2!1d-49.0837427!2d-26.914365!3m4!1m2!1d-49.0834158!2d-26.9171734!3s0x94df1928691ccc95:0x489c4ad221a2cb1b!3m4!1m2!1d-49.0858547!2d-26.9179816!3s0x94df1928b8e1b06b:0xba0673a78b88e415!3m4!1m2!1d-49.0867041!2d-26.9182234!3s0x94df1928b4c281cf:0x4a83ee0740b6227!1m5!1m1!1s0x94df193e80108ebd:0xc8db62e94f28dbb5!2m2!1d-49.0869563!2d-26.9183266!1m10!1m1!1s0x94df193f76714149:0xe680b9775cc34431!2m2!1d-49.0903409!2d-26.9153469!3m4!1m2!1d-49.086916!2d-26.9147089!3s0x94df192eac9732cf:0x443a7ed94b08b9f7!1m10!1m1!1s0x94df191837974133:0xfb140b4a189ee218!2m2!1d-49.0908103!2d-26.9145927!3m4!1m2!1d-49.0917955!2d-26.9113143!3s0x94df192d55ee6d4d:0x2b6f5d8073377534!1m10!1m1!1s0x94df19d5111ec857:0x643775d8a3ceafda!2m2!1d-49.0854484!2d-26.9134193!3m4!1m2!1d-49.087781!2d-26.9142892!3s0x94df192c197141af:0x70863b6020d6d2c8!1m5!1m1!1s0x94df192b76bea40b:0x163dee3f6c978a85!2m2!1d-49.0862793!2d-26.9115097!3e2?entry=tts&g_ep=EgoyMDI1MDkwMi4wIPu8ASoASAFQAw%3D%3D&skid=41c0ac29-71de-4bf7-a1f8-38be27a11a96&output=embed" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
@@ -85,7 +85,7 @@
         <a class="btn primary" target="_blank" href="https://maps.app.goo.gl/M1WBUEuadBUzHJ5Y9">Abrir no Google Maps</a>
         <a class="btn" target="_blank" href="https://www.google.com/mymaps">Editar no My Maps</a>
       </div>
-      <p class="pill" style="margin-top:10px">Status: <b>6/10</b> paradas definidas</p>
+      <p class="pill" style="margin-top:10px">Status: <b>10/10</b> paradas planejadas (4 novas no final)</p>
     </section>
 
     <!-- Coluna lateral com regras e explicação -->
@@ -106,18 +106,36 @@
     <section class="card section">
       <h3>Paradas previstas (edite à vontade)</h3>
       <ul class="list" id="stops">
-        <li class="stop"><div class="left"><div class="km">KM0</div><div><div class="name">Parque Ramiro Ruediger</div><small>largada</small></div></div><span class="status">confirmado</span></li>
-        <li class="stop"><div class="left"><div class="km">KM1</div><div><div class="name">Eisenbahn Biergarten</div><small>1ª pint</small></div></div><span class="status">confirmado</span></li>
-        <li class="stop"><div class="left"><div class="km">KM2</div><div><div class="name">NOSSA Cozinha e Bar</div><small>2ª pint</small></div></div><span class="status">confirmado</span></li>
-        <li class="stop"><div class="left"><div class="km">KM3</div><div><div class="name">ESQUINA DECK BAR</div><small>3ª pint</small></div></div><span class="status">confirmado</span></li>
-        <li class="stop"><div class="left"><div class="km">KM4</div><div><div class="name">Alek Bar</div><small>4ª pint</small></div></div><span class="status">confirmado</span></li>
-        <li class="stop"><div class="left"><div class="km">KM5</div><div><div class="name">Noa Noa Blumenau</div><small>5ª pint</small></div></div><span class="status">confirmado</span></li>
-        <li class="stop"><div class="left"><div class="km">KM6</div><div><div class="name">Tamandaré Food Park</div><small>6ª pint</small></div></div><span class="status">confirmado</span></li>
-        <li class="stop"><div class="left"><div class="km">KM7</div><div><div class="name" contenteditable>Adicionar pub…</div><small>7ª pint</small></div></div><span class="status pending">pendente</span></li>
-        <li class="stop"><div class="left"><div class="km">KM8</div><div><div class="name" contenteditable>Adicionar pub…</div><small>8ª pint</small></div></div><span class="status pending">pendente</span></li>
-        <li class="stop"><div class="left"><div class="km">KM9</div><div><div class="name" contenteditable>Adicionar pub…</div><small>9ª pint</small></div></div><span class="status pending">pendente</span></li>
-        <li class="stop"><div class="left"><div class="km">KM10</div><div><div class="name" contenteditable>Chegada (ex.: voltar ao Parque)</div><small>final</small></div></div><span class="status pending">definir</span></li>
+        <li class="stop" data-lat="-26.9134278" data-lng="-49.0854747"><div class="left"><div class="km">KM0</div><div><div class="name">Parque Ramiro Ruediger</div><small>largada</small></div></div><div><label class="pill"><input type="checkbox" class="chk-agua"> água</label></div></li>
+        <li class="stop" data-lat="-26.914365" data-lng="-49.0837427"><div class="left"><div class="km">KM1</div><div><div class="name">Eisenbahn Biergarten</div><small>1ª pint</small></div></div><div><label class="pill"><input type="checkbox" class="chk-pint"> pint</label> <label class="pill"><input type="checkbox" class="chk-agua"> água</label></div></li>
+        <li class="stop" data-lat="-26.9183266" data-lng="-49.0869563"><div class="left"><div class="km">KM2</div><div><div class="name">NOSSA Cozinha e Bar</div><small>2ª pint</small></div></div><div><label class="pill"><input type="checkbox" class="chk-pint"> pint</label> <label class="pill"><input type="checkbox" class="chk-agua"> água</label></div></li>
+        <li class="stop" data-lat="-26.9153469" data-lng="-49.0903409"><div class="left"><div class="km">KM3</div><div><div class="name">ESQUINA DECK BAR</div><small>3ª pint</small></div></div><div><label class="pill"><input type="checkbox" class="chk-pint"> pint</label> <label class="pill"><input type="checkbox" class="chk-agua"> água</label></div></li>
+        <li class="stop" data-lat="-26.9145927" data-lng="-49.0908103"><div class="left"><div class="km">KM4</div><div><div class="name">Alek Bar</div><small>4ª pint</small></div></div><div><label class="pill"><input type="checkbox" class="chk-pint"> pint</label> <label class="pill"><input type="checkbox" class="chk-agua"> água</label></div></li>
+        <li class="stop" data-lat="-26.9134193" data-lng="-49.0854484"><div class="left"><div class="km">KM5</div><div><div class="name">Noa Noa Blumenau</div><small>5ª pint</small></div></div><div><label class="pill"><input type="checkbox" class="chk-pint"> pint</label> <label class="pill"><input type="checkbox" class="chk-agua"> água</label></div></li>
+        <li class="stop" data-lat="-26.9115097" data-lng="-49.0862793"><div class="left"><div class="km">KM6</div><div><div class="name">Tamandaré Food Park</div><small>6ª pint</small></div></div><div><label class="pill"><input type="checkbox" class="chk-pint"> pint</label> <label class="pill"><input type="checkbox" class="chk-agua"> água</label></div></li>
+        <li class="stop" data-lat="-26.914365" data-lng="-49.0837427"><div class="left"><div class="km">KM7</div><div><div class="name">Eisenbahn Biergarten (volta)</div><small>7ª pint</small></div></div><div><label class="pill"><input type="checkbox" class="chk-pint"> pint</label> <label class="pill"><input type="checkbox" class="chk-agua"> água</label></div></li>
+        <li class="stop" data-lat="-26.9134193" data-lng="-49.0854484"><div class="left"><div class="km">KM8</div><div><div class="name">Noa Noa (volta)</div><small>8ª pint</small></div></div><div><label class="pill"><input type="checkbox" class="chk-pint"> pint</label> <label class="pill"><input type="checkbox" class="chk-agua"> água</label></div></li>
+        <li class="stop" data-lat="-26.9153469" data-lng="-49.0903409"><div class="left"><div class="km">KM9</div><div><div class="name">ESQUINA DECK BAR (volta)</div><small>9ª pint</small></div></div><div><label class="pill"><input type="checkbox" class="chk-pint"> pint</label> <label class="pill"><input type="checkbox" class="chk-agua"> água</label></div></li>
+        <li class="stop" data-lat="-26.9145927" data-lng="-49.0908103"><div class="left"><div class="km">KM10</div><div><div class="name">Alek Bar (volta)</div><small>10ª pint</small></div></div><div><label class="pill"><input type="checkbox" class="chk-pint"> pint</label> <label class="pill"><input type="checkbox" class="chk-agua"> água</label></div></li>
       </ul>
+      <div class="cta">
+        <button class="btn accent" id="export">Exportar lista (JSON)</button>
+        <button class="btn" id="markAll">Marcar tudo como concluído</button>
+        <a class="btn" id="toggleMapSize">Tela cheia do mapa</a>
+      </div>
+      <hr style="border:0;border-top:1px solid #1e2a34;margin:18px 0">
+      <h3>Configurações & tempos estimados</h3>
+      <div class="rule" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+        <label class="pill">Ritmo (min/km): <input id="paceMin" type="number" value="6" min="3" max="12" style="width:64px;background:transparent;border:none;color:var(--text)"> : <input id="paceSec" type="number" value="00" min="0" max="59" style="width:64px;background:transparent;border:none;color:var(--text)"></label>
+        <label class="pill">Pausa por pub (min): <input id="stopMin" type="number" value="7" min="1" max="30" style="width:64px;background:transparent;border:none;color:var(--text)"></label>
+        <button class="btn accent" id="recalc">Recalcular tempos</button>
+      </div>
+      <div style="overflow:auto">
+        <table id="timesTable" style="width:100%;border-collapse:separate;border-spacing:0 8px">
+          <thead><tr style="color:var(--muted);text-align:left"><th>Trecho</th><th>Distância (km)</th><th>Corrida</th><th>Pausa</th><th>Acumulado</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
       <div class="cta">
         <button class="btn accent" id="export">Exportar lista (JSON)</button>
         <button class="btn" id="markAll">Marcar tudo como concluído</button>
@@ -130,32 +148,83 @@
   </footer>
 
   <script>
-    // Salva edições simples no localStorage
-    const names = document.querySelectorAll('.name[contenteditable]');
-    names.forEach((n,i)=>{
+    const q = (s, r=document) => r.querySelector(s);
+    const qa = (s, r=document) => [...r.querySelectorAll(s)];
+
+    // Expand / collapse map height
+    const toggleBtn = q('#toggleMapSize');
+    if (toggleBtn){ toggleBtn.onclick = () => {
+      const wrap = q('.map-wrap');
+      wrap.style.height = wrap.style.height === '90vh' ? '78vh' : '90vh';
+    }; }
+
+    // Save editable names (kept for future)
+    qa('.name[contenteditable]').forEach((n,i)=>{
       const key = 'stopName'+i; const saved = localStorage.getItem(key); if(saved) n.textContent = saved;
       n.addEventListener('input', ()=> localStorage.setItem(key, n.textContent.trim()));
     });
 
-    // Marcar tudo como concluído (visual)
-    document.getElementById('markAll').onclick = () => {
-      document.querySelectorAll('.status').forEach(s=>{ s.textContent='confirmado'; s.classList.remove('pending'); });
-    };
+    // Mark all confirmed (if button exists)
+    const markBtn = q('#markAll');
+    if (markBtn){ markBtn.onclick = () => { qa('.status').forEach(s=>{ s.textContent='confirmado'; s.classList.remove('pending'); }); } }
 
-    // Exportar lista JSON
-    document.getElementById('export').onclick = () => {
-      const data = [...document.querySelectorAll('#stops .stop')].map(li=>({
+    // Distance + pacing
+    const R = 6371e3; // meters
+    const rad = d => d * Math.PI / 180;
+    function haversine(a,b){
+      const dLat = rad(b.lat-a.lat); const dLng = rad(b.lng-a.lng);
+      const s = Math.sin(dLat/2)**2 + Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dLng/2)**2;
+      return 2*R*Math.asin(Math.sqrt(s))/1000; // km
+    }
+
+    function getStops(){
+      return qa('#stops .stop').map(li=>({
         km: li.querySelector('.km').textContent,
-        nome: li.querySelector('.name').textContent.trim(),
-        status: li.querySelector('.status').textContent
+        nome: li.querySelector('.name')?li.querySelector('.name').textContent.trim():li.querySelector('.km').textContent,
+        lat: parseFloat(li.dataset.lat),
+        lng: parseFloat(li.dataset.lng)
       }));
-      const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'beer-run-blumenau-stops.json';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    };
+    }
+
+    function secToHMM(sec){
+      const h = Math.floor(sec/3600), m = Math.round((sec%3600)/60);
+      return (h>0? h+":" : "") + String(m).padStart(2,'0') + ' min';
+    }
+
+    function recalc(){
+      const paceMin = Math.max(3, Math.min(12, parseInt(q('#paceMin').value||6)));
+      const paceSec = Math.max(0, Math.min(59, parseInt(q('#paceSec').value||0)));
+      const pace = paceMin*60 + paceSec; // seconds per km
+      const stopMin = Math.max(0, parseInt(q('#stopMin').value||7));
+
+      const stops = getStops();
+      const tbody = q('#timesTable tbody');
+      tbody.innerHTML = '';
+      let cum = 0;
+
+      for(let i=0;i<stops.length-1;i++){
+        const a = stops[i], b = stops[i+1];
+        const dist = haversine(a,b); // straight-line approx
+        const run = Math.round(dist * pace);
+        const pause = (i>=0? stopMin*60 : 0); // pause at each pub arrival
+        cum += run + pause;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${a.km} → ${b.km} (${b.nome})</td><td>${dist.toFixed(2)}</td><td>${secToHMM(run)}</td><td>${pause? (pause/60)+' min':''}</td><td>${secToHMM(cum)}</td>`;
+        tbody.appendChild(tr);
+      }
+    }
+
+    const recalcBtn = q('#recalc'); if(recalcBtn) recalcBtn.onclick = recalc; recalc();
+
+    // Export JSON of stops
+    const exportBtn = q('#export');
+    if (exportBtn){
+      exportBtn.onclick = () => {
+        const data = getStops().map(s=>({km:s.km, nome:s.nome, lat:s.lat, lng:s.lng}));
+        const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'beer-run-blumenau-stops.json'; a.click(); URL.revokeObjectURL(a.href);
+      };
+    }
   </script>
 </body>
 </html>
