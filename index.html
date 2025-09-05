@@ -1,173 +1,236 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Blumenau 6K — 1 km • 1 pub • 1 pint</title>
-  <meta name="description" content="Corrida temática em Blumenau: 10 km, a cada 1 km parar em um pub para 1 pint. Mapa, regras e lista de paradas." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0b0d10;
-      --card: #13161a;
-      --muted: #a7b0ba;
-      --text: #e5edf5;
-      --accent: #ffd166; /* amarelo cerveja */
-      --accent-2: #06d6a0; /* verde sucesso */
-      --danger: #ef476f;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius: 18px;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-      color: var(--text); background: radial-gradient(1200px 700px at 20% -20%, #1a2026 5%, transparent 60%), var(--bg);
-    }
-    header {
-      padding: 48px 24px 24px; max-width: 1100px; margin: 0 auto;
-    }
-    .badge { display:inline-flex; align-items:center; gap:.5rem; padding:.35rem .7rem; border-radius:999px; background:#1f252b; color:var(--muted); font-weight:600; font-size:.9rem }
-    .title { font-size: clamp(2rem, 3vw + 1rem, 3.2rem); margin: 14px 0 8px; font-weight: 800; letter-spacing: -.02em }
-    .subtitle { color: var(--muted); max-width: 70ch }
-    .grid { display:grid; gap:20px; grid-template-columns: 1.2fr .8fr; }
-    @media (max-width: 960px){ .grid{ grid-template-columns: 1fr; } }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blumenau 6K — 1 km • 1 pub • 1 pint</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Tokens para o tema escuro */
+        :root {
+            --bg: #111111;
+            --text: #EAEAEA;
+            --muted: #888888;
+            --card: #1C1C1C;
+            --line: #333333;
+            --accent: #FFCA3A; /* Amarelo "cerveja" */
+            --accent-2: #FFB300;
+            --danger: #FF5252;
+            --radius: 0.75rem; /* 12px */
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
 
-    .card { background: linear-gradient(180deg,#161a20, #101317); border:1px solid #1e252c; border-radius: var(--radius); box-shadow: var(--shadow); overflow:clip }
-    .card h3 { margin: 0 0 10px; font-size: 1.1rem }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+        }
 
-    .map-wrap { width: 100%; height: 78vh; border-radius: 16px; overflow: hidden; }
-    #map { width:100%; height:100%; }
-    .num-marker { background: #ffd166; color:#1b1402; border:2px solid #cc9c00; font-weight:800; width:28px; height:28px; border-radius:50%; display:grid; place-items:center; box-shadow: var(--shadow)}
-    iframe { width:100%; height:100%; border:0; display:block }
+        /* Estilos customizados utilizando os tokens */
+        .card {
+            background-color: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--line);
+        }
 
-    .section { padding: 10px; }
-    main { max-width: 1100px; margin: 0 auto; padding: 0 24px 40px; display: grid; gap: 20px }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            border: 1px solid transparent;
+        }
 
-    .list { list-style: none; margin: 0; padding: 0 }
-    .stop { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px; border-radius: 14px; background:#12161b; border:1px solid #1c232a }
-    .stop small { color: var(--muted) }
-    .stop .left { display:flex; align-items:center; gap:12px }
-    .km { width: 48px; height: 48px; display:grid; place-items:center; border-radius: 12px; background:#0f1317; border:1px solid #252c34; font-weight:800 }
-    .name { font-weight:600 }
-    .status { font-size: .85rem; padding:.2rem .6rem; border-radius:999px; border:1px solid #22303b; color:#a5c2ab; background:#0d1612 }
-    .pending { color:#c5b087; background:#161307; border-color:#3a2e13 }
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--bg);
+        }
+        .btn-primary:hover {
+            background-color: var(--accent-2);
+        }
 
-    .pill { display:inline-flex; align-items:center; gap:.4rem; padding:.25rem .5rem; border-radius:999px; border:1px solid #2a333d; color:var(--muted); font-size:.85rem }
-    .pill b { color: var(--accent) }
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text);
+            border-color: var(--line);
+        }
+        .btn-secondary:hover {
+            background-color: var(--line);
+        }
+        
+        /* Estilização da lista de paradas */
+        .stops-list {
+            list-style: none;
+            padding-left: 0;
+            position: relative;
+        }
+        .stops-list::before {
+            content: '';
+            position: absolute;
+            top: 1rem;
+            bottom: 1rem;
+            left: 20px;
+            width: 2px;
+            background-color: var(--line);
+        }
 
-    .rules { display:grid; gap:12px; grid-template-columns: repeat(2, minmax(0,1fr)); }
-    @media (max-width: 720px){ .rules{ grid-template-columns: 1fr; } }
-    .rule { padding:12px 14px; border-radius: 14px; background:#101419; border:1px dashed #29313a }
-
-    .cta { display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px }
-    .btn { appearance:none; border:none; background:#1b2229; color:var(--text); padding:12px 16px; border-radius: 12px; font-weight:600; cursor:pointer; border:1px solid #25313b; box-shadow: var(--shadow); text-decoration:none }
-    .btn.primary { background: linear-gradient(180deg,#2b343d,#1a2128); border-color:#303a44 }
-    .btn.accent { background: linear-gradient(180deg,#ffd166,#ffb703); color:#1b1402; border-color:#f1a40a }
-
-    footer { color: var(--muted); text-align:center; padding: 40px 24px }
-  </style>
-  <!-- Leaflet CSS/JS para mapa sem bloqueio de iframe -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        .stop-item {
+            position: relative;
+            padding-left: 50px;
+            padding-bottom: 2rem;
+        }
+        .stop-item::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 4px;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--line);
+            border-radius: 9999px;
+            background-color: var(--bg);
+            z-index: 1;
+        }
+        
+        .stop-item.active::before {
+            border-color: var(--accent);
+            background-color: var(--accent);
+        }
+        
+        .stop-item:last-child {
+            padding-bottom: 0;
+        }
+    </style>
 </head>
-<body>
-  <header>
-    <span class="badge">🍺🏃‍♂️ Beer Run</span>
-    <h1 class="title">Blumenau 6K — 1 km • 1 pub • 1 pint</h1>
-    <p class="subtitle">Proposta de corrida urbana divertida: completar <b>6 km</b> passando por pubs a cada <b>1 km</b>, tomando <b>1 pint</b> em cada parada. Vale dar pequenas voltas em quadra para fechar a distância. Tolerância de <b>±100 m</b> entre paradas.</p>
-  </header>
+<body class="antialiased">
 
-  <main class="grid">
-    <!-- Coluna do mapa -->
-    <section class="card section">
-      <h3>Mapa — Google Maps (rota oficial ~5,9 km)</h3>
-      <div class="map-wrap">
-        <iframe src="https://www.google.com/maps/dir/Parque+Ramiro+Ruediger/Eisenbahn+Biergarten/NOSSA+Cozinha+e+Bar/ESQUINA+DECK+BAR/Alek+Bar/Noa+Noa+Blumenau/Tamandar%C3%A9+Food+Park/@-26.9135027,-49.0908527,15z/am=t/data=!3m1!4b1!4m79!4m78!1m10!1m1!1s0x94df192c74b4af19:0xcbfa9dde180aaf3!2m2!1d-49.0854747!2d-26.9134278!3m4!1m2!1d-49.0877278!2d-26.9143896!3s0x94df192c197141af:0x70863b6020d6d2c8!1m20!1m1!1s0x94df19801e880781:0xb669ea20ac861570!2m2!1d-49.0837427!2d-26.914365!3m4!1m2!1d-49.0834158!2d-26.9171734!3s0x94df1928691ccc95:0x489c4ad221a2cb1b!3m4!1m2!1d-49.0858547!2d-26.9179816!3s0x94df1928b8e1b06b:0xba0673a78b88e415!3m4!1m2!1d-49.0867041!2d-26.9182234!3s0x94df1928b4c281cf:0x4a83ee0740b6227!1m5!1m1!1s0x94df193e80108ebd:0xc8db62e94f28dbb5!2m2!1d-49.0869563!2d-26.9183266!1m10!1m1!1s0x94df193f76714149:0xe680b9775cc34431!2m2!1d-49.0903409!2d-26.9153469!3m4!1m2!1d-49.086916!2d-26.9147089!3s0x94df192eac9732cf:0x443a7ed94b08b9f7!1m10!1m1!1s0x94df191837974133:0xfb140b4a189ee218!2m2!1d-49.0908103!2d-26.9145927!3m4!1m2!1d-49.0917955!2d-26.9113143!3s0x94df192d55ee6d4d:0x2b6f5d8073377534!1m10!1m1!1s0x94df19d5111ec857:0x643775d8a3ceafda!2m2!1d-49.0854484!2d-26.9134193!3m4!1m2!1d-49.087781!2d-26.9142892!3s0x94df192c197141af:0x70863b6020d6d2c8!1m5!1m1!1s0x94df192b76bea40b:0x163dee3f6c978a85!2m2!1d-49.0862793!2d-26.9115097!3e2?entry=tts&output=embed" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="width:100%;height:100%;border:0"></iframe>
-      </div>
-      <div class="cta">
-        <a class="btn primary" target="_blank" href="https://maps.app.goo.gl/DctECxPaSkQcfvnw5">Abrir no Google Maps</a>
-      </div>
-      </div>
-      <div class="cta">
-        <a class="btn primary" target="_blank" href="https://maps.app.goo.gl/M1WBUEuadBUzHJ5Y9">Abrir no Google Maps</a>
-        <a class="btn" target="_blank" href="https://www.google.com/mymaps">Editar no My Maps</a>
-      </div>
-      <p class="pill" style="margin-top:10px">Status: <b>6/6</b> paradas definidas (6 pints)</p>
-    </section>
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+        <!-- Grid principal -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Coluna Esquerda: Paradas -->
+            <aside class="lg:col-span-1">
+                <div class="card p-6 sticky top-8">
+                    <h2 class="text-2xl font-bold mb-6">Paradas <span class="text-sm font-normal text-muted">(6 pints)</span></h2>
+                    <ol class="stops-list">
+                        <li class="stop-item active">
+                            <strong class="text-accent">KM0 (Largada)</strong>
+                            <p class="text-muted text-sm">Parque Ramiro Ruediger — sem pint.</p>
+                        </li>
+                        <li class="stop-item">
+                            <strong class="text-lg">KM1: Eisenbahn Biergarten</strong>
+                            <p class="text-muted text-sm">1ª pint.</p>
+                        </li>
+                        <li class="stop-item">
+                            <strong class="text-lg">KM2: NOSSA Cozinha e Bar</strong>
+                            <p class="text-muted text-sm">2ª pint.</p>
+                        </li>
+                        <li class="stop-item">
+                            <strong class="text-lg">KM3: Esquina Deck Bar</strong>
+                            <p class="text-muted text-sm">3ª pint.</p>
+                        </li>
+                         <li class="stop-item">
+                            <strong class="text-lg">KM4: Alek Bar</strong>
+                            <p class="text-muted text-sm">4ª pint.</p>
+                        </li>
+                        <li class="stop-item">
+                            <strong class="text-lg">KM5: Tamandaré Food Park</strong>
+                            <p class="text-muted text-sm">5ª pint.</p>
+                        </li>
+                        <li class="stop-item active">
+                            <strong class="text-accent">KM6 (Chegada)</strong>
+                            <p class="text-muted text-sm">Noa Noa Blumenau — 6ª pint • festa!</p>
+                        </li>
+                    </ol>
+                </div>
+            </aside>
 
-    <!-- Coluna lateral com regras e explicação -->
-    <aside class="card section">
-      <h3>Como funciona</h3>
-      <div class="rules">
-        <div class="rule">• Distância total: <b>10 km</b>.</div>
-        <div class="rule">• A cada <b>1 km</b>, parar em um <b>pub</b> e tomar <b>1 pint</b>.</div>
-        <div class="rule">• Válido dar <b>voltinhas em quadra</b> para fechar 1 km.</div>
-        <div class="rule">• Tolerância: <b>±100 m</b> do próximo pub.</div>
-      </div>
-      <h3 style="margin-top:18px">Segurança & bom senso</h3>
-      <p class="subtitle">Hidrate-se entre as paradas, evite vias perigosas, atravesse na faixa, e, se beber, <b>não dirija</b>. Considere apoio de um amigo sober para logística.</p>
-    </aside>
-  </main>
+            <!-- Coluna Direita: Header e Mapa -->
+            <main class="lg:col-span-2">
+                <!-- Header -->
+                <header class="mb-8">
+                    <h1 class="text-4xl md:text-5xl font-black tracking-tight">Blumenau 6K</h1>
+                    <p class="text-xl md:text-2xl font-semibold text-accent mb-3">1 km • 1 pub • 1 pint</p>
+                    <p class="text-muted max-w-2xl">
+                        O percurso total tem 6 km. A cada quilômetro percorrido (com uma tolerância de ±100 metros), faremos uma parada estratégica em um pub para reabastecer com 1 pint de chope.
+                    </p>
+                    <div class="mt-6 flex flex-col sm:flex-row gap-4">
+                        <a href="https://maps.app.goo.gl/W2BahN9iDQyxdNm59" target="_blank" rel="noopener noreferrer" class="btn btn-primary text-center">
+                            Abrir rota no Google Maps
+                        </a>
+                        <button id="copy-link-btn" class="btn btn-secondary">
+                            Copiar link da rota
+                        </button>
+                    </div>
+                </header>
 
-  <main style="max-width:1100px" class="section">
-    <section class="card section">
-      <h3>Paradas previstas (edite à vontade)</h3>
-      <ul class="list" id="stops">
-        <li class="stop" data-lat="-26.9134278" data-lng="-49.0854747"><div class="left"><div class="km">KM0</div><div><div class="name">Parque Ramiro Ruediger</div><small>largada</small></div></div><div><label class="pill"><input type="checkbox" class="chk-agua"> água</label></div></li>
-        <li class="stop" data-lat="-26.914365" data-lng="-49.0837427"><div class="left"><div class="km">KM1</div><div><div class="name">Eisenbahn Biergarten</div><small>1ª pint</small></div></div><div><label class="pill"><input type="checkbox" class="chk-pint"> pint</label> <label class="pill"><input type="checkbox" class="chk-agua"> água</label></div></li>
-        <li class="stop" data-lat="-26.9183266" data-lng="-49.0869563"><div class="left"><div class="km">KM2</div><div><div class="name">NOSSA Cozinha e Bar</div><small>2ª pint</small></div></div><div><label class="pill"><input type="checkbox" class="chk-pint"> pint</label> <label class="pill"><input type="checkbox" class="chk-agua"> água</label></div></li>
-        <li class="stop" data-lat="-26.9153469" data-lng="-49.0903409"><div class="left"><div class="km">KM3</div><div><div class="name">ESQUINA DECK BAR</div><small>3ª pint</small></div></div><div><label class="pill"><input type="checkbox" class="chk-pint"> pint</label> <label class="pill"><input type="checkbox" class="chk-agua"> água</label></div></li>
-        <li class="stop" data-lat="-26.9145927" data-lng="-49.0908103"><div class="left"><div class="km">KM4</div><div><div class="name">Alek Bar</div><small>4ª pint</small></div></div><div><label class="pill"><input type="checkbox" class="chk-pint"> pint</label> <label class="pill"><input type="checkbox" class="chk-agua"> água</label></div></li>
-        <li class="stop" data-lat="-26.9134193" data-lng="-49.0854484"><div class="left"><div class="km">KM5</div><div><div class="name">Noa Noa Blumenau</div><small>5ª pint</small></div></div><div><label class="pill"><input type="checkbox" class="chk-pint"> pint</label> <label class="pill"><input type="checkbox" class="chk-agua"> água</label></div></li>
-        <li class="stop" data-lat="-26.9115097" data-lng="-49.0862793"><div class="left"><div class="km">KM6</div><div><div class="name">Tamandaré Food Park</div><small>6ª pint • chegada</small></div></div><div><label class="pill"><input type="checkbox" class="chk-pint"> pint</label> <label class="pill"><input type="checkbox" class="chk-agua"> água</label></div></li>
-      </ul>
-      <div class="cta">
-        <button class="btn accent" id="export">Exportar lista (JSON)</button>
-        <button class="btn" id="markAll">Marcar tudo como concluído</button>
-        <a class="btn" id="toggleMapSize">Tela cheia do mapa</a>
-      </div>
-      <hr style="border:0;border-top:1px solid #1e2a34;margin:18px 0">
-      <h3>Configurações & tempos estimados</h3>
-      <div class="rule" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">
-        <label class="pill">Ritmo (min/km): <input id="paceMin" type="number" value="6" min="3" max="12" style="width:64px;background:transparent;border:none;color:var(--text)"> : <input id="paceSec" type="number" value="00" min="0" max="59" style="width:64px;background:transparent;border:none;color:var(--text)"></label>
-        <label class="pill">Pausa por pub (min): <input id="stopMin" type="number" value="7" min="1" max="30" style="width:64px;background:transparent;border:none;color:var(--text)"></label>
-        <button class="btn accent" id="recalc">Recalcular tempos</button>
-      </div>
-      <div style="overflow:auto">
-        <table id="timesTable" style="width:100%;border-collapse:separate;border-spacing:0 8px">
-          <thead><tr style="color:var(--muted);text-align:left"><th>Trecho</th><th>Distância (km)</th><th>Corrida</th><th>Pausa</th><th>Acumulado</th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-      <div class="cta">
-        <button class="btn accent" id="export">Exportar lista (JSON)</button>
-        <button class="btn" id="markAll">Marcar tudo como concluído</button>
-      </div>
-    </section>
-  </main>
+                <!-- Mapa Integrado -->
+                <div class="card overflow-hidden">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m58!1m12!1m3!1d28432.067242842698!2d-49.09102434129761!3d-26.91896734135541!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m43!3e2!4m5!1s0x94de18c81828731d%3A0x1d6d33a4369e06e3!2sParque%20Ramiro%20Ruediger%2C%20R.%20Alberto%20Stein%2C%20416%20-%20Velha%2C%20Blumenau%20-%20SC%2C%2089036-200!3m2!1d-26.9130768!2d-49.0838974!4m5!1s0x94de18c83f905c11%3A0x1a868a5c3702b851!2sEisenbahn%20Biergarten%2C%20R.%20Alberto%20Stein%2C%20199%20-%20Velha%2C%20Blumenau%20-%20SC%2C%2089036-200!3m2!1d-26.9204432!2d-49.0820468!4m5!1s0x94de18227b592471%3A0x3345ae7853612053!2sNOSSA%20Cozinha%20e%20Bar%2C%20R.%20Ant%C3%B4nio%20da%20Veiga%2C%20484%20-%20Vila%20Nova%2C%20Blumenau%20-%20SC%2C%2089035-202!3m2!1d-26.9202159!2d-49.0734008!4m5!1s0x94de182315b63795%3A0xfa959a35e076632a!2sEsquina%20Deck%20Bar%2C%20R.%20S%C3%A3o%20Paulo%2C%201880%20-%20Itoupava%20Seca%2C%20Blumenau%20-%20SC%2C%2089035-001!3m2!1d-26.9153549!2d-49.0716613!4m5!1s0x94de18251e62ddc7%3A0x16b0439f7831ce86!2sAlek%20Bar%2C%20R.%20Para%C3%ADba%2C%20356%20-%20Victor%20Konder%2C%20Blumenau%20-%20SC%2C%2089012-140!3m2!1d-26.9118744!2d-49.0664872!4m5!1s0x94de1819d67568ad%3A0xe54d8ed763c32e5!2sTamandar%C3%A9%20Food%20Park%2C%20R.%20Almirante%20Tamandar%C3%A9%2C%201870%20-%20Vila%20Nova%2C%20Blumenau%20-%20SC%2C%2089035-401!3m2!1d-26.916538!2d-49.058988!5e0!3m2!1spt-BR!2sbr!4v1725557762696!5m2!1spt-BR!2sbr"
+                        width="100%" 
+                        height="550" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </main>
+        </div>
+    </div>
 
-  <footer>
-    <small>Beer Run Blumenau • Projeto pessoal. Este site é um modelo estático para organização do trajeto.</small>
-  </footer>
+    <script>
+        // Lógica para o botão de copiar link
+        const copyButton = document.getElementById('copy-link-btn');
+        const routeUrl = 'https://maps.app.goo.gl/W2BahN9iDQyxdNm59';
 
-  <script>
-    // Somente utilidades de lista/tempos e export — sem mapa alternativo
-    const q = (s, r=document) => r.querySelector(s); const qa = (s, r=document) => [...r.querySelectorAll(s)];
+        copyButton.addEventListener('click', () => {
+            // Cria um elemento de input temporário para copiar o texto
+            const tempInput = document.createElement('input');
+            tempInput.style.position = 'absolute';
+            tempInput.style.left = '-9999px';
+            tempInput.value = routeUrl;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            
+            try {
+                // Tenta usar a API moderna, se disponível
+                navigator.clipboard.writeText(routeUrl).then(() => {
+                    showFeedback();
+                }).catch(() => {
+                    // Fallback para o método antigo
+                    document.execCommand('copy');
+                    showFeedback();
+                });
+            } catch (err) {
+                // Fallback para o método antigo se a API não existir
+                document.execCommand('copy');
+                showFeedback();
+            }
 
-    // Guardar possíveis nomes editáveis no futuro
-    qa('.name[contenteditable]').forEach((n,i)=>{ const key='stopName'+i; const saved=localStorage.getItem(key); if(saved) n.textContent=saved; n.addEventListener('input',()=>localStorage.setItem(key,n.textContent.trim())); });
+            document.body.removeChild(tempInput);
+        });
 
-    // Cálculo simples de tempos por trecho (distâncias aproximadas entre paradas)
-    const R=6371e3, rad=d=>d*Math.PI/180; function hav(a,b){ const dLat=rad(b.lat-a.lat), dLng=rad(b.lng-a.lng); const s=Math.sin(dLat/2)**2 + Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dLng/2)**2; return 2*R*Math.asin(Math.sqrt(s))/1000; }
-    function getStops(){ return [...document.querySelectorAll('#stops .stop')].map(li=>({ km: li.querySelector('.km').textContent, nome: li.querySelector('.name')?.textContent.trim(), lat: parseFloat(li.dataset.lat), lng: parseFloat(li.dataset.lng) })); }
-    function secToHMM(sec){ const m=Math.round(sec/60); return m+" min"; }
-    function recalc(){ const paceMin=parseInt(document.getElementById('paceMin')?.value||6), paceSec=parseInt(document.getElementById('paceSec')?.value||0), stopMin=parseInt(document.getElementById('stopMin')?.value||7); const pace=paceMin*60+paceSec; const tbody=document.querySelector('#timesTable tbody'); if(!tbody)return; tbody.innerHTML=''; let cum=0; const s=getStops(); for(let i=0;i<s.length-1;i++){ const a=s[i], b=s[i+1]; const dist=hav(a,b); const run=Math.round(dist*pace), pause=stopMin*60; cum+=run+pause; const tr=document.createElement('tr'); tr.innerHTML=`<td>${a.km} → ${b.km} (${b.nome})</td><td>${dist.toFixed(2)}</td><td>${secToHMM(run)}</td><td>${stopMin} min</td><td>${secToHMM(cum)}</td>`; tbody.appendChild(tr);} }
-    document.getElementById('recalc')?.addEventListener('click', recalc); recalc();
+        function showFeedback() {
+            const originalText = copyButton.textContent;
+            copyButton.textContent = 'Link copiado!';
+            copyButton.style.color = 'var(--accent)';
+            copyButton.style.borderColor = 'var(--accent)';
 
-    // Export JSON das paradas
-    document.getElementById('export')?.addEventListener('click', ()=>{ const data=getStops(); const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='beer-run-blumenau-6K.json'; a.click(); URL.revokeObjectURL(a.href); });
-  </script>
+            setTimeout(() => {
+                copyButton.textContent = originalText;
+                copyButton.style.color = ''; // Volta ao padrão
+                copyButton.style.borderColor = ''; // Volta ao padrão
+            }, 1200); // Feedback dura 1.2 segundos
+        }
+    </script>
+
 </body>
 </html>
+
+
