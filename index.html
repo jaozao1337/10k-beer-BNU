@@ -38,6 +38,8 @@
     .card h3 { margin: 0 0 10px; font-size: 1.1rem }
 
     .map-wrap { width: 100%; height: 78vh; border-radius: 16px; overflow: hidden; }
+    #map { width:100%; height:100%; }
+    .num-marker { background: #ffd166; color:#1b1402; border:2px solid #cc9c00; font-weight:800; width:28px; height:28px; border-radius:50%; display:grid; place-items:center; box-shadow: var(--shadow)}
     iframe { width:100%; height:100%; border:0; display:block }
 
     .section { padding: 10px; }
@@ -66,6 +68,9 @@
 
     footer { color: var(--muted); text-align:center; padding: 40px 24px }
   </style>
+  <!-- Leaflet CSS/JS para mapa sem bloqueio de iframe -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 </head>
 <body>
   <header>
@@ -79,7 +84,7 @@
     <section class="card section">
       <h3>Mapa — rota fiel ao seu print (ampliada)</h3>
       <div class="map-wrap">
-        <iframe src="https://www.google.com/maps/dir/Parque+Ramiro+Ruediger/Eisenbahn+Biergarten/NOSSA+Cozinha+e+Bar/ESQUINA+DECK+BAR/Alek+Bar/Noa+Noa+Blumenau/Tamandar%C3%A9+Food+Park/@-26.9135027,-49.0908527,17z/am=t/data=!3m1!4b1!4m79!4m78!1m10!1m1!1s0x94df192c74b4af19:0xcbfa9dde180aaf3!2m2!1d-49.0854747!2d-26.9134278!3m4!1m2!1d-49.0877278!2d-26.9143896!3s0x94df192c197141af:0x70863b6020d6d2c8!1m20!1m1!1s0x94df19801e880781:0xb669ea20ac861570!2m2!1d-49.0837427!2d-26.914365!3m4!1m2!1d-49.0834158!2d-26.9171734!3s0x94df1928691ccc95:0x489c4ad221a2cb1b!3m4!1m2!1d-49.0858547!2d-26.9179816!3s0x94df1928b8e1b06b:0xba0673a78b88e415!3m4!1m2!1d-49.0867041!2d-26.9182234!3s0x94df1928b4c281cf:0x4a83ee0740b6227!1m5!1m1!1s0x94df193e80108ebd:0xc8db62e94f28dbb5!2m2!1d-49.0869563!2d-26.9183266!1m10!1m1!1s0x94df193f76714149:0xe680b9775cc34431!2m2!1d-49.0903409!2d-26.9153469!3m4!1m2!1d-49.086916!2d-26.9147089!3s0x94df192eac9732cf:0x443a7ed94b08b9f7!1m10!1m1!1s0x94df191837974133:0xfb140b4a189ee218!2m2!1d-49.0908103!2d-26.9145927!3m4!1m2!1d-49.0917955!2d-26.9113143!3s0x94df192d55ee6d4d:0x2b6f5d8073377534!1m10!1m1!1s0x94df19d5111ec857:0x643775d8a3ceafda!2m2!1d-49.0854484!2d-26.9134193!3m4!1m2!1d-49.087781!2d-26.9142892!3s0x94df192c197141af:0x70863b6020d6d2c8!1m5!1m1!1s0x94df192b76bea40b:0x163dee3f6c978a85!2m2!1d-49.0862793!2d-26.9115097!3e2?entry=tts&g_ep=EgoyMDI1MDkwMi4wIPu8ASoASAFQAw%3D%3D&skid=41c0ac29-71de-4bf7-a1f8-38be27a11a96&output=embed" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div id="map"></div>
       </div>
       <div class="cta">
         <a class="btn primary" target="_blank" href="https://maps.app.goo.gl/M1WBUEuadBUzHJ5Y9">Abrir no Google Maps</a>
@@ -151,80 +156,108 @@
     const q = (s, r=document) => r.querySelector(s);
     const qa = (s, r=document) => [...r.querySelectorAll(s)];
 
-    // Expand / collapse map height
-    const toggleBtn = q('#toggleMapSize');
-    if (toggleBtn){ toggleBtn.onclick = () => {
-      const wrap = q('.map-wrap');
-      wrap.style.height = wrap.style.height === '90vh' ? '78vh' : '90vh';
-    }; }
+    // ========= Leaflet Map =========
+    const map = L.map('map');
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
 
-    // Save editable names (kept for future)
+    // Rota fiel ao seu print (aproximação com muitos vértices)
+    const route = [
+      // Loop interno no Parque Ramiro (parecido com o print)
+      [-26.91379, -49.08618],[-26.91405, -49.08579],[-26.91418, -49.08520],[-26.91407, -49.08463],[-26.91376, -49.08420],[-26.91331, -49.08400],[-26.91290, -49.08414],[-26.91257, -49.08450],[-26.91243, -49.08504],[-26.91253, -49.08561],[-26.91283, -49.08603],[-26.91324, -49.08624],[-26.91362, -49.08622],[-26.91379, -49.08618],
+      // Saída leste até Eisenbahn Biergarten
+      [-26.91370, -49.08590],[-26.91378, -49.08555],[-26.91395, -49.08521],[-26.91415, -49.08492],[-26.91433, -49.08463],[-26.91437, -49.08430],[-26.91437, -49.08395],[-26.914365, -49.0837427],
+      // Grande laço para sudeste/sul e retorno (conforme pontos do print)
+      [-26.91510, -49.08330],[-26.91605, -49.08380],[-26.91710, -49.08460],[-26.91800, -49.08570],[-26.91820, -49.08660],
+      // NOSSA Cozinha e Bar
+      [-26.9183266, -49.0869563],
+      // Oeste até Esquina Deck e Alek, com meia-volta
+      [-26.91750, -49.08840],[-26.91640, -49.08940],[-26.91580, -49.09005],[-26.9153469, -49.0903409],
+      [-26.9149000, -49.09060],[-26.9145927, -49.0908103],
+      // Retorno ao entorno do Parque/Noa Noa com zigue-zagues (como no print)
+      [-26.91430, -49.09010],[-26.91405, -49.08940],[-26.91380, -49.08860],[-26.91365, -49.08790],[-26.91352, -49.08720],[-26.91347, -49.08660],[-26.91342, -49.08600],[-26.9134193, -49.0854484],
+      // Laços ao norte do parque (região "Resenhas bar" no print)
+      [-26.91295, -49.08525],[-26.91220, -49.08510],[-26.91160, -49.08530],[-26.91110, -49.08580],[-26.91090, -49.08640],[-26.91110, -49.08710],[-26.91160, -49.08750],[-26.91230, -49.08745],[-26.91290, -49.08705],[-26.91320, -49.08650],
+      // Saída para oeste até Tamandaré Food Park (ponto final do seu link)
+      [-26.91270, -49.08630],[-26.91220, -49.08631],[-26.91180, -49.08630],[-26.9115097, -49.0862793]
+    ];
+
+    const poly = L.polyline(route, { color: '#ffd166', weight: 5, opacity: 0.9 }).addTo(map);
+    map.fitBounds(poly.getBounds(), { padding: [20,20] });
+
+    // Paradas (10/10) com marcadores numerados
+    const stops = [
+      {n:0, name:'Parque Ramiro Ruediger (largada)', lat:-26.9134278, lng:-49.0854747},
+      {n:1, name:'Eisenbahn Biergarten', lat:-26.914365, lng:-49.0837427},
+      {n:2, name:'NOSSA Cozinha e Bar', lat:-26.9183266, lng:-49.0869563},
+      {n:3, name:'ESQUINA DECK BAR', lat:-26.9153469, lng:-49.0903409},
+      {n:4, name:'Alek Bar', lat:-26.9145927, lng:-49.0908103},
+      {n:5, name:'Noa Noa Blumenau', lat:-26.9134193, lng:-49.0854484},
+      {n:6, name:'Tamandaré Food Park', lat:-26.9115097, lng:-49.0862793},
+      // KM7–KM10 (voltas planejadas — alinhadas ao seu caminho)
+      {n:7, name:'Eisenbahn (volta)', lat:-26.914365, lng:-49.0837427},
+      {n:8, name:'Noa Noa (volta)', lat:-26.9134193, lng:-49.0854484},
+      {n:9, name:'Esquina Deck (volta)', lat:-26.9153469, lng:-49.0903409},
+      {n:10, name:'Alek Bar (volta)', lat:-26.9145927, lng:-49.0908103}
+    ];
+
+    const numIcon = (i)=> L.divIcon({ className:'num-marker', html: i, iconSize:[28,28], iconAnchor:[14,14] });
+    stops.forEach(s => {
+      L.marker([s.lat, s.lng], { icon: numIcon(s.n) }).addTo(map).bindPopup(`<b>KM${s.n}</b> — ${s.name}`);
+    });
+
+    // ========= Controles existentes (lista, tempos, export) =========
+    // Save editable names (se houver)
     qa('.name[contenteditable]').forEach((n,i)=>{
       const key = 'stopName'+i; const saved = localStorage.getItem(key); if(saved) n.textContent = saved;
       n.addEventListener('input', ()=> localStorage.setItem(key, n.textContent.trim()));
     });
 
-    // Mark all confirmed (if button exists)
+    // Mark all confirmed (se existir o botão)
     const markBtn = q('#markAll');
     if (markBtn){ markBtn.onclick = () => { qa('.status').forEach(s=>{ s.textContent='confirmado'; s.classList.remove('pending'); }); } }
 
-    // Distance + pacing
-    const R = 6371e3; // meters
-    const rad = d => d * Math.PI / 180;
+    // Distância & pacing (usando paradas para estimar por trecho)
+    const R = 6371e3; const rad = d => d * Math.PI / 180;
     function haversine(a,b){
-      const dLat = rad(b.lat-a.lat); const dLng = rad(b.lng-a.lng);
+      const dLat = rad(b.lat-a.lat), dLng = rad(b.lng-a.lng);
       const s = Math.sin(dLat/2)**2 + Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dLng/2)**2;
       return 2*R*Math.asin(Math.sqrt(s))/1000; // km
     }
 
     function getStops(){
-      return qa('#stops .stop').map(li=>({
-        km: li.querySelector('.km').textContent,
-        nome: li.querySelector('.name')?li.querySelector('.name').textContent.trim():li.querySelector('.km').textContent,
-        lat: parseFloat(li.dataset.lat),
-        lng: parseFloat(li.dataset.lng)
-      }));
+      return stops.map(s=>({ km:`KM${s.n}`, nome:s.name, lat:s.lat, lng:s.lng }));
     }
 
-    function secToHMM(sec){
-      const h = Math.floor(sec/3600), m = Math.round((sec%3600)/60);
-      return (h>0? h+":" : "") + String(m).padStart(2,'0') + ' min';
-    }
+    function secToHMM(sec){ const m=Math.round(sec/60); return m+" min"; }
 
     function recalc(){
-      const paceMin = Math.max(3, Math.min(12, parseInt(q('#paceMin').value||6)));
-      const paceSec = Math.max(0, Math.min(59, parseInt(q('#paceSec').value||0)));
-      const pace = paceMin*60 + paceSec; // seconds per km
-      const stopMin = Math.max(0, parseInt(q('#stopMin').value||7));
-
-      const stops = getStops();
-      const tbody = q('#timesTable tbody');
+      const paceMin = parseInt(document.getElementById('paceMin').value||6);
+      const paceSec = parseInt(document.getElementById('paceSec').value||0);
+      const stopMin = parseInt(document.getElementById('stopMin').value||7);
+      const pace = (paceMin*60 + paceSec);
+      const tbody = document.querySelector('#timesTable tbody');
       tbody.innerHTML = '';
-      let cum = 0;
-
-      for(let i=0;i<stops.length-1;i++){
-        const a = stops[i], b = stops[i+1];
-        const dist = haversine(a,b); // straight-line approx
-        const run = Math.round(dist * pace);
-        const pause = (i>=0? stopMin*60 : 0); // pause at each pub arrival
-        cum += run + pause;
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${a.km} → ${b.km} (${b.nome})</td><td>${dist.toFixed(2)}</td><td>${secToHMM(run)}</td><td>${pause? (pause/60)+' min':''}</td><td>${secToHMM(cum)}</td>`;
+      let cum=0; const s = getStops();
+      for(let i=0;i<s.length-1;i++){
+        const a=s[i], b=s[i+1];
+        const dist = haversine(a,b);
+        const run = Math.round(dist*pace); const pause = stopMin*60; cum += run+pause;
+        const tr=document.createElement('tr');
+        tr.innerHTML = `<td>${a.km} → ${b.km} (${b.nome})</td><td>${dist.toFixed(2)}</td><td>${secToHMM(run)}</td><td>${stopMin} min</td><td>${secToHMM(cum)}</td>`;
         tbody.appendChild(tr);
       }
     }
+    document.getElementById('recalc').onclick = recalc; recalc();
 
-    const recalcBtn = q('#recalc'); if(recalcBtn) recalcBtn.onclick = recalc; recalc();
-
-    // Export JSON of stops
-    const exportBtn = q('#export');
-    if (exportBtn){
-      exportBtn.onclick = () => {
-        const data = getStops().map(s=>({km:s.km, nome:s.nome, lat:s.lat, lng:s.lng}));
-        const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'beer-run-blumenau-stops.json'; a.click(); URL.revokeObjectURL(a.href);
-      };
-    }
+    // Export JSON dos stops
+    const exportBtn = document.getElementById('export');
+    if (exportBtn){ exportBtn.onclick = () => {
+      const data = getStops();
+      const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='beer-run-blumenau-stops.json'; a.click(); URL.revokeObjectURL(a.href);
+    }; }
   </script>
 </body>
 </html>
