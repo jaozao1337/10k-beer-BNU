@@ -44,6 +44,7 @@
             font-weight: 600;
             transition: all 0.2s ease-in-out;
             border: 1px solid transparent;
+            cursor: pointer;
         }
 
         .btn-primary {
@@ -105,6 +106,12 @@
         .stop-item:last-child {
             padding-bottom: 0;
         }
+
+        /* Estilos para o Modal */
+        .modal-overlay {
+            background-color: rgba(0,0,0,0.7);
+            transition: opacity 0.3s ease;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -157,14 +164,17 @@
                     <h1 class="text-4xl md:text-5xl font-black tracking-tight">Blumenau 6K</h1>
                     <p class="text-xl md:text-2xl font-semibold text-accent mb-3">1 km • 1 pub • 1 pint</p>
                     <p class="text-muted max-w-2xl">
-                        O percurso total tem 6 km. A cada quilômetro percorrido (com uma tolerância de ±100 metros), faremos uma parada estratégica em um pub para reabastecer com 1 pint de chope.
+                        O percurso total tem 5,9 km. A cada quilômetro percorrido (com uma tolerância de ±100 metros), faremos uma parada estratégica em um pub para reabastecer com 1 pint de chope.
                     </p>
-                    <div class="mt-6 flex flex-col sm:flex-row gap-4">
+                    <div class="mt-6 flex flex-col sm:flex-row gap-4 flex-wrap">
                         <a href="https://maps.app.goo.gl/tazrM1DKgjBcU3K96" target="_blank" rel="noopener noreferrer" class="btn btn-primary text-center">
                             Abrir rota no Google Maps
                         </a>
                         <button id="copy-link-btn" class="btn btn-secondary">
                             Copiar link da rota
+                        </button>
+                        <button id="show-details-btn" class="btn btn-secondary">
+                            Ver rota detalhada
                         </button>
                     </div>
                 </header>
@@ -178,13 +188,50 @@
         </div>
     </div>
 
+    <!-- Modal de Rota Detalhada -->
+    <div id="route-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div id="modal-overlay" class="modal-overlay absolute inset-0"></div>
+        <div class="card relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 md:p-8">
+            <button id="close-modal-btn" class="absolute top-4 right-4 text-muted hover:text-text transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+            <h2 class="text-2xl font-bold mb-4">Rota Detalhada</h2>
+            <div class="prose prose-invert text-muted space-y-4">
+                <div>
+                    <h3 class="font-bold text-accent">Trecho 1: Parque Ramiro Ruediger → Eisenbahn Biergarten (1.2 km)</h3>
+                    <p>Siga para sudeste na R. Alberto Stein, vire à direita, depois à esquerda em direção à R. Dr. Léo de Carvalho. Siga pelas ruas Dr. Max Taváres D'Amaral, Zenaide Santos de Souza, volte para a Alberto Stein e entre na R. Humberto de Campos. Por fim, vire à direita na R. Mariana Bronnemann, onde o destino estará à esquerda.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-accent">Trecho 2: Eisenbahn Biergarten → NOSSA Cozinha e Bar (0.75 km)</h3>
+                    <p>Siga pela R. Mariana Bronnemann e vire à direita na R. João Pessoa. O destino estará à frente.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-accent">Trecho 3: NOSSA Cozinha e Bar → Esquina Deck Bar (0.85 km)</h3>
+                    <p>Siga para leste na R. João Pessoa, vire à esquerda na R. Itapiranga e depois à esquerda na R. Humberto de Campos. O destino estará à direita.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-accent">Trecho 4: Esquina Deck Bar → Alek Bar (1.0 km)</h3>
+                    <p>Siga pela R. Humberto de Campos, vire à esquerda na R. Itapiranga e novamente à esquerda na R. Dr. Léo de Carvalho. Continue pelas ruas Jacó Brueckheimer, Pastor Antônio Lemos, Elesbão Pinto e, por fim, vire à esquerda na R. Henrique Dias. O bar estará à sua esquerda.</p>
+                </div>
+                 <div>
+                    <h3 class="font-bold text-accent">Trecho 5: Alek Bar → Noa Noa Blumenau (1.2 km)</h3>
+                    <p>Siga pela R. Henrique Dias, vire à direita na R. Mal. Deodoro, e depois de passar a Loja Bike On, vire à direita novamente. Faça uma curva suave à direita para voltar à R. Alberto Stein. O destino estará à direita, próximo ao ponto de partida.</p>
+                </div>
+                 <div>
+                    <h3 class="font-bold text-accent">Trecho 6: Noa Noa Blumenau → Tamandaré Food Park (0.9 km)</h3>
+                    <p>Siga pela R. Alberto Stein, vire à direita, e siga pelas ruas Dr. Léo de Carvalho, Dr. Max Taváres D'Amaral e Zenaide Santos de Souza. Vire à esquerda na R. Alberto Stein e, finalmente, à esquerda na R. Alm. Tamandaré, onde encontrará o destino final.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script>
-        // Lógica para o botão de copiar link
+        // --- Lógica para o botão de copiar link ---
         const copyButton = document.getElementById('copy-link-btn');
         const routeUrl = 'https://maps.app.goo.gl/tazrM1DKgjBcU3K96';
 
         copyButton.addEventListener('click', () => {
-            // Cria um elemento de input temporário para copiar o texto
             const tempInput = document.createElement('input');
             tempInput.style.position = 'absolute';
             tempInput.style.left = '-9999px';
@@ -193,16 +240,13 @@
             tempInput.select();
             
             try {
-                // Tenta usar a API moderna, se disponível
                 navigator.clipboard.writeText(routeUrl).then(() => {
                     showFeedback();
                 }).catch(() => {
-                    // Fallback para o método antigo
                     document.execCommand('copy');
                     showFeedback();
                 });
             } catch (err) {
-                // Fallback para o método antigo se a API não existir
                 document.execCommand('copy');
                 showFeedback();
             }
@@ -218,11 +262,37 @@
 
             setTimeout(() => {
                 copyButton.textContent = originalText;
-                copyButton.style.color = ''; // Volta ao padrão
-                copyButton.style.borderColor = ''; // Volta ao padrão
-            }, 1200); // Feedback dura 1.2 segundos
+                copyButton.style.color = '';
+                copyButton.style.borderColor = '';
+            }, 1200);
         }
+
+        // --- Lógica para o Modal de Rota Detalhada ---
+        const showModalBtn = document.getElementById('show-details-btn');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const modal = document.getElementById('route-modal');
+        const modalOverlay = document.getElementById('modal-overlay');
+
+        function openModal() {
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+        }
+
+        showModalBtn.addEventListener('click', openModal);
+        closeModalBtn.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', closeModal);
+
+        // Fechar com a tecla Esc
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
     </script>
 
 </body>
 </html>
+
