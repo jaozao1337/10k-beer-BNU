@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Beer Run Blumenau 10K</title>
+  <meta name="description" content="Corrida temática em Blumenau: 10 km, a cada 1 km parar em um pub para 1 pint. Mapa, regras e lista de paradas." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --card: #13161a;
+      --muted: #a7b0ba;
+      --text: #e5edf5;
+      --accent: #ffd166; /* amarelo cerveja */
+      --accent-2: #06d6a0; /* verde sucesso */
+      --danger: #ef476f;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text); background: radial-gradient(1200px 700px at 20% -20%, #1a2026 5%, transparent 60%), var(--bg);
+    }
+    header {
+      padding: 48px 24px 24px; max-width: 1100px; margin: 0 auto;
+    }
+    .badge { display:inline-flex; align-items:center; gap:.5rem; padding:.35rem .7rem; border-radius:999px; background:#1f252b; color:var(--muted); font-weight:600; font-size:.9rem }
+    .title { font-size: clamp(2rem, 3vw + 1rem, 3.2rem); margin: 14px 0 8px; font-weight: 800; letter-spacing: -.02em }
+    .subtitle { color: var(--muted); max-width: 70ch }
+    .grid { display:grid; gap:20px; grid-template-columns: 1.2fr .8fr; }
+    @media (max-width: 960px){ .grid{ grid-template-columns: 1fr; } }
+
+    .card { background: linear-gradient(180deg,#161a20, #101317); border:1px solid #1e252c; border-radius: var(--radius); box-shadow: var(--shadow); overflow:clip }
+    .card h3 { margin: 0 0 10px; font-size: 1.1rem }
+
+    .map-wrap { aspect-ratio: 16/10; }
+    iframe { width:100%; height:100%; border:0; display:block }
+
+    .section { padding: 10px; }
+    main { max-width: 1100px; margin: 0 auto; padding: 0 24px 40px; display: grid; gap: 20px }
+
+    .list { list-style: none; margin: 0; padding: 0 }
+    .stop { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px; border-radius: 14px; background:#12161b; border:1px solid #1c232a }
+    .stop small { color: var(--muted) }
+    .stop .left { display:flex; align-items:center; gap:12px }
+    .km { width: 48px; height: 48px; display:grid; place-items:center; border-radius: 12px; background:#0f1317; border:1px solid #252c34; font-weight:800 }
+    .name { font-weight:600 }
+    .status { font-size: .85rem; padding:.2rem .6rem; border-radius:999px; border:1px solid #22303b; color:#a5c2ab; background:#0d1612 }
+    .pending { color:#c5b087; background:#161307; border-color:#3a2e13 }
+
+    .pill { display:inline-flex; align-items:center; gap:.4rem; padding:.25rem .5rem; border-radius:999px; border:1px solid #2a333d; color:var(--muted); font-size:.85rem }
+    .pill b { color: var(--accent) }
+
+    .rules { display:grid; gap:12px; grid-template-columns: repeat(2, minmax(0,1fr)); }
+    @media (max-width: 720px){ .rules{ grid-template-columns: 1fr; } }
+    .rule { padding:12px 14px; border-radius: 14px; background:#101419; border:1px dashed #29313a }
+
+    .cta { display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px }
+    .btn { appearance:none; border:none; background:#1b2229; color:var(--text); padding:12px 16px; border-radius: 12px; font-weight:600; cursor:pointer; border:1px solid #25313b; box-shadow: var(--shadow); text-decoration:none }
+    .btn.primary { background: linear-gradient(180deg,#2b343d,#1a2128); border-color:#303a44 }
+    .btn.accent { background: linear-gradient(180deg,#ffd166,#ffb703); color:#1b1402; border-color:#f1a40a }
+
+    footer { color: var(--muted); text-align:center; padding: 40px 24px }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="badge">🍺🏃‍♂️ Beer Run</span>
+    <h1 class="title">Blumenau 10K — 1 km • 1 pub • 1 pint</h1>
+    <p class="subtitle">Proposta de corrida urbana divertida: completar <b>10 km</b> passando por pubs a cada <b>1 km</b>, tomando <b>1 pint</b> em cada parada. Vale dar pequenas voltas em quadra para fechar a distância. Tolerância de <b>±100 m</b> entre paradas.</p>
+  </header>
+
+  <main class="grid">
+    <!-- Coluna do mapa -->
+    <section class="card section">
+      <h3>Mapa (seu trajeto atual — 6 paradas)</h3>
+      <div class="map-wrap">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m58!1m12!1m3!1d3557.6846145142235!2d-49.09085274637228!3d-26.91350266821048!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m43!3e2!4m5!1s0x94df192c74b4af19%3A0xcbfa9dde180aaf3!2sParque%20Ramiro%20Ruediger!3m2!1d-26.913427799999997!2d-49.0854747!4m5!1s0x94df19801e880781%3A0xb669ea20ac861570!2sEisenbahn%20Biergarten!3m2!1d-26.914365!2d-49.083742699999995!4m5!1s0x94df193e80108ebd%3A0xc8db62e94f28dbb5!2sNOSSA%20Cozinha%20e%20Bar!3m2!1d-26.9183266!2d-49.0869563!4m5!1s0x94df193f76714149%3A0xe680b9775cc34431!2sESQUINA%20DECK%20BAR!3m2!1d-26.9153469!2d-49.0903409!4m5!1s0x94df191837974133%3A0xfb140b4a189ee218!2sAlek%20Bar!3m2!1d-26.9145927!2d-49.0908103!4m5!1s0x94df19d5111ec857%3A0x643775d8a3ceafda!2sNoa%20Noa%20Blumenau!3m2!1d-26.913419299999997!2d-49.0854484!4m5!1s0x94df192b76bea40b%3A0x163dee3f6c978a85!2sTamandar%C3%A9%20Food%20Park!3m2!1d-26.9115097!2d-49.0862793!5e0!3m2!1spt-BR!2sbr!4v1757082182683!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <div class="cta">
+        <a class="btn primary" target="_blank" href="https://www.google.com/maps">Abrir no Google Maps</a>
+        <a class="btn" target="_blank" href="https://www.google.com/mymaps">Editar no My Maps</a>
+      </div>
+      <p class="pill" style="margin-top:10px">Status: <b>6/10</b> paradas definidas</p>
+    </section>
+
+    <!-- Coluna lateral com regras e explicação -->
+    <aside class="card section">
+      <h3>Como funciona</h3>
+      <div class="rules">
+        <div class="rule">• Distância total: <b>10 km</b>.</div>
+        <div class="rule">• A cada <b>1 km</b>, parar em um <b>pub</b> e tomar <b>1 pint</b>.</div>
+        <div class="rule">• Válido dar <b>voltinhas em quadra</b> para fechar 1 km.</div>
+        <div class="rule">• Tolerância: <b>±100 m</b> do próximo pub.</div>
+      </div>
+      <h3 style="margin-top:18px">Segurança & bom senso</h3>
+      <p class="subtitle">Hidrate-se entre as paradas, evite vias perigosas, atravesse na faixa, e, se beber, <b>não dirija</b>. Considere apoio de um amigo sober para logística.</p>
+    </aside>
+  </main>
+
+  <main style="max-width:1100px" class="section">
+    <section class="card section">
+      <h3>Paradas previstas (edite à vontade)</h3>
+      <ul class="list" id="stops">
+        <li class="stop"><div class="left"><div class="km">KM0</div><div><div class="name">Parque Ramiro Ruediger</div><small>largada</small></div></div><span class="status">confirmado</span></li>
+        <li class="stop"><div class="left"><div class="km">KM1</div><div><div class="name">Eisenbahn Biergarten</div><small>1ª pint</small></div></div><span class="status">confirmado</span></li>
+        <li class="stop"><div class="left"><div class="km">KM2</div><div><div class="name">NOSSA Cozinha e Bar</div><small>2ª pint</small></div></div><span class="status">confirmado</span></li>
+        <li class="stop"><div class="left"><div class="km">KM3</div><div><div class="name">ESQUINA DECK BAR</div><small>3ª pint</small></div></div><span class="status">confirmado</span></li>
+        <li class="stop"><div class="left"><div class="km">KM4</div><div><div class="name">Alek Bar</div><small>4ª pint</small></div></div><span class="status">confirmado</span></li>
+        <li class="stop"><div class="left"><div class="km">KM5</div><div><div class="name">Noa Noa Blumenau</div><small>5ª pint</small></div></div><span class="status">confirmado</span></li>
+        <li class="stop"><div class="left"><div class="km">KM6</div><div><div class="name">Tamandaré Food Park</div><small>6ª pint</small></div></div><span class="status">confirmado</span></li>
+        <li class="stop"><div class="left"><div class="km">KM7</div><div><div class="name" contenteditable>Adicionar pub…</div><small>7ª pint</small></div></div><span class="status pending">pendente</span></li>
+        <li class="stop"><div class="left"><div class="km">KM8</div><div><div class="name" contenteditable>Adicionar pub…</div><small>8ª pint</small></div></div><span class="status pending">pendente</span></li>
+        <li class="stop"><div class="left"><div class="km">KM9</div><div><div class="name" contenteditable>Adicionar pub…</div><small>9ª pint</small></div></div><span class="status pending">pendente</span></li>
+        <li class="stop"><div class="left"><div class="km">KM10</div><div><div class="name" contenteditable>Chegada (ex.: voltar ao Parque)</div><small>final</small></div></div><span class="status pending">definir</span></li>
+      </ul>
+      <div class="cta">
+        <button class="btn accent" id="export">Exportar lista (JSON)</button>
+        <button class="btn" id="markAll">Marcar tudo como concluído</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <small>Beer Run Blumenau • Projeto pessoal. Este site é um modelo estático para organização do trajeto.</small>
+  </footer>
+
+  <script>
+    // Salva edições simples no localStorage
+    const names = document.querySelectorAll('.name[contenteditable]');
+    names.forEach((n,i)=>{
+      const key = 'stopName'+i; const saved = localStorage.getItem(key); if(saved) n.textContent = saved;
+      n.addEventListener('input', ()=> localStorage.setItem(key, n.textContent.trim()));
+    });
+
+    // Marcar tudo como concluído (visual)
+    document.getElementById('markAll').onclick = () => {
+      document.querySelectorAll('.status').forEach(s=>{ s.textContent='confirmado'; s.classList.remove('pending'); });
+    };
+
+    // Exportar lista JSON
+    document.getElementById('export').onclick = () => {
+      const data = [...document.querySelectorAll('#stops .stop')].map(li=>({
+        km: li.querySelector('.km').textContent,
+        nome: li.querySelector('.name').textContent.trim(),
+        status: li.querySelector('.status').textContent
+      }));
+      const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'beer-run-blumenau-stops.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    };
+  </script>
+</body>
+</html>
